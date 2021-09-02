@@ -2,7 +2,7 @@ package ru.sber.oop
 
 import kotlin.random.Random
 
-open class Room(var name: String, var size: Int) {
+open class Room(val name: String, val size: Int) {
 
     protected open val dangerLevel = 5
     val monster: Monster = Goblin(
