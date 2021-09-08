@@ -1,11 +1,15 @@
 package ru.sber.nio
 
+import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.FileWriter
 import java.nio.file.Files
 import java.nio.file.Paths
 import kotlin.io.path.isDirectory
+import kotlin.io.path.readLines
+import kotlin.io.path.readText
+import kotlin.io.path.useLines
 
 /**
  * Реализовать простой аналог утилиты grep с использованием калссов из пакета java.nio.
@@ -27,13 +31,11 @@ class Grep {
             val fout = FileOutputStream("io/result.txt")
             var foundLines = ""
             Files.walk(path).filter { !it.isDirectory() }.forEach {
-                val fin = FileInputStream(it.toString())
-                fin.bufferedReader().use { stream ->
-                    val lines = stream.readLines()
-                    for ((numberLine, line) in lines.withIndex()) {
-                        if (line.contains(subString))
-                            foundLines += "${it.fileName} : ${numberLine + 1} : $line\n"
-                    }
+                val fileContent = Files.lines(Paths.get(it.toString()))
+                var numberLine = 1
+                for (line in fileContent) {
+                    if (line.contains(subString))
+                        foundLines += "${it.fileName} : ${numberLine++} : $line\n"
                 }
             }
             fout.use { stream ->
